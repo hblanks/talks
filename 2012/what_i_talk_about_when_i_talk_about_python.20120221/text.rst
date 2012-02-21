@@ -5,15 +5,15 @@ What I talk about when I talk about Python
 Prologue
 --------
 
-I visited an old friend and former colleague in Boston this past
-January. It happens that we've both had the chance to work with a
-particularly extraordinary engineer, and when our conversation turned to
-him and how he was doing, it naturally also turned to the topic of what
-it's been like to work with him. Matt first asked me, "Does he still
-leave those comments in his code?" and then he told this story, which
-marks the beginning of this talk.
+Last month I visited an old friend and former colleague in Boston. It
+happens that we've both worked with a particularly extraordinary
+guy, and when our conversation turned to him and how he was doing,
+it naturally also turned to the topic of what it's been like to work
+with him. Matt first asked me, "Does he still leave those comments in
+his code?" and then he told this story, which marks the beginning of
+this talk.
 
-In the great dot-com boom, Matt and the extraordinary engineer are both
+In the great dot-com boom, Matt and colleague-in-common are both
 working at a streaming video startup in the Bay Area. The hours are no
 doubt untenable, and the business will ultimately fail after a nearly
 uncountable number of financing rounds. Nevertheless, the technology is

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<!--
+
+  Modified from:
+
+  Google HTML5 slide template
+
+  Authors: Luke Mahé (code)
+           Marcin Wichary (code and design)
+           
+           Dominic Mazzoni (browser compatibility)
+           Charles Chen (ChromeVox support)
+
+  URL: http://code.google.com/p/html5slides/
+-->
+
+<html>
+  <head>
+    <title>What I talk about when I talk about Python</title>
+
+    <meta charset='utf-8'>
+
+    <script src='./slides.js'></script>
+  </head>
+  
+  <body style='display: none'>
+
+    <section class='slides layout-regular template-default'>
+      
+      <!-- Your slides (<article>s) go here. Delete or comment out the
+           slides below. -->
+        
+        
+      
+	<article class='bigcode'>
+        <pre>
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+{
+
+}
+		</pre>
+	</article>
+
+      <article class="titlepage">
+        <h1>
+          What I talk about when I talk about Python
+        </h1>
+        <p>
+          Hunter Blanks, hblanks@monetate.com / @tildehblanks
+        </p>
+
+        <div class="bottomright">
+          <span style="color: #AD1912">RedSnake</span> Philly.
+          February 21, 2012
+        </div>
+      </article>
+
+    <article>
+    	<h2>Part I: Latour</h2>
+    </article>
+
+	<article>
+		<div class="figure" style="margin-top: 0px">
+			<img src="./images/latour-intro.png" height="600"/>
+			<br />
+			(Bruno Latour, <em>Science In Action</em>, p. 1)
+		</div>
+	</article>
+
+	<article>
+		<q>
+			Science has two faces. One that knows, the other that
+			does not know yet.
+		</q>
+		
+		<div class="author">
+			Bruno Latour, <em>Science In Action</em>, p. 7
+		</div>
+	</article>
+
+	<article>
+		<div style="height: 160px;"></div>
+		<div class="figure">
+			<img src="./images/latour-faces.png" />
+			<br />
+			(Latour, p. 4)
+		</div>
+	</article>
+
+	<article>
+		<div style="height: 100px"></div>
+		<p>
+			When I talk about Python, I am always asking:
+			<ol>
+				<li>What levels of abstraction -- i.e., which "black" boxes -- are available?</li>
+				<li>Which ones do I want to engage with?</li>
+			</ol>
+		</p>
+		<div class="figure">
+			<img src="./images/python_levels_of_abstraction.png" />
+		</div>
+	</article>
+
+
+	<article>
+		Thus, when we import <tt>requests</tt>, it's a (hopefully not-so-black)
+		box that gets us what we want from a URL:
+
+		<pre>
+>>> import requests
+>>> r = requests.get('https://google.com/')
+>>> (r.status_code, r.content[:40])
+(200, '&lt;!doctype html&gt;&lt;html itemscope itemtype=')</pre>
+
+But inside <tt>requests</tt>, or underneath it, we must deal
+with a different box, <tt>urllib2</tt>:
+
+		<pre>
+>>> import urllib2
+>>> u = urllib2.urlopen('https://google.com/')
+>>> u
+&lt;addinfourl at 4391764336 whose fp = &lt;socket._fileobject object at 0x105c43c50&gt;&gt;</pre>
+	</article>
+
+    <article>
+    	<h2>Part II: Rabinow, Jean-Paul, Sloterdijk</h2>
+    </article>
+
+	<article>
+        <q>
+          Additionally, and unexpectedly, this book addresses the reader
+          as a friend.
+          <!-- Initially this appellation too is opaque. However,
+          using as a guide Jean-Paul's wonderful claim that
+          ‘Philosophy is the ability to make friends through the medium
+          of a written text,’ we at least have some sense of the
+          territory to be visited in the following chapters....
+          -->
+        </q>
+        <div class='author'>
+          Paul Rabinow, <em>Anthropos Today</em>, p. 1
+        </div>
+	</article>
+
+	<article>
+        <q class="small">
+          ‘Books,’ remarked the poet Jean-Paul once, ‘are long
+          letters to friends.’ One could not define with greater
+          elegance the character and function of humanism: it is,
+          in its quintessence, a telecommunication, a way of
+          creating friendships at a distance through writing.
+        </q>
+        <div class='author'>
+          Peter Sloterdijk, <em>Regeln für den Menschenpark</em>
+        </div>
+	</article>
+
+	<!-- XXX article on what this is not:
+	
+		- not Proust
+		- not Us Weekly
+		- technical writing
+	</-->
+	
+	<article>
+		<div style="height: 100px;"></div>
+		<pre class="smaller">
+@P=split//,".URRUU\c8R";@d=split//,"\nrekcah xinU / lreP rehtona tsuJ";sub p{
+@p{"r$p","u$p"}=(P,P);pipe"r$p","u$p";++$p;($q*=2)+=$f=!fork;map{$P=$P[$f^ord
+($p{$_})&6];$p{$_}=/ ^$P/ix?$P:close$_}keys%p}p;p;p;p;p;map{$p{$_}=~/^[P.]/&&
+close$_}%p;wait until$?;map{/^r/&&<$_>}%p;$_=$d[$q];sleep rand(2)if/\S/;print</pre>
+
+		<q class="smaller">
+I think [the contest judge] made a bad judgement, because the
+winning program was not nearly as confusing as mine . . . .
+My program is difficult to understand even if you fix it up with good
+formatting and reasonable variable names.
+		</q>
+		
+        <div class='author'>
+          Mark Jason Dominus,
+          <small><a href="http://perl.plover.com/obfuscated/">http://perl.plover.com/obfuscated/</a></small>
+		</div>
+	</article>
+
+	<article>
+		As an author, being friendly entails, among other things,
+		writing documentation, be it internal or external:
+		
+<pre class="smaller">
+# --------------------------------------------------------- common routines
+
+def pathdirs():
+    """Convert sys.path into a list of absolute, existing, unique paths."""</pre>
+
+		as well as providing tools for reading it:
+
+<pre class="smaller">
+$ pydoc -p 8000
+</pre>
+
+<pre class="smaller">
+$ sphinx-quickstart
+$ make html
+</pre>
+
+	</article>
+
+	<article>
+		But as a reader, we may have obligations, too.
+		<pre>
+&lt;title&gt;Introduction&lt;/title&gt;
+&lt;para&gt;
+Welcome, <span style="color: #AD1912; font-weight:bold">gentle reader</span>, to Rusty's Remarkably Unreliable Guide to
+Linux Kernel Hacking.  This document describes the common routines
+and general requirements for kernel code: its goal is to serve as a
+primer for Linux kernel development for experienced C programmers. 
+I avoid implementation details: that's what the code is for, and I
+ignore whole tracts of useful routines.
+&lt;/para&gt;
+&lt;para&gt;
+Before you read this, please understand that I never wanted to
+write this document, being grossly under-qualified, but I always
+wanted to read it, and this was the only way.  I hope it will
+grow into a compendium of best practice, common starting points
+and random information.
+&lt;/para&gt;</pre>
+
+		<div class='author'>
+			Rusty Russell,<br />
+			<span style="font-size: 20px">
+				linux-3.2.7/Documentation/DocBook/kernel-hacking.tmpl
+			</span>
+		</div>
+
+	</article>
+
+
+	<article>
+		<h2>Conclusion: Murakami, Carver</h2>
+	</article>
+
+	<article>
+		<div style="height: 20px;"></div>
+		<div class="figure">
+			<table class="noborder"><tr>
+				<td>
+					<img src="./images/murakami.jpg" />
+				</td>
+				<td>
+					<img src="./images/carver.jpg" />
+				</td>
+			</tr></table>
+		</div>
+		
+		<q class="smaller">It seems to me we're just beginners</q>
+		<div class="author" style="margin-left: -10px">
+			Raymond Carver, <br /> <small><em>What We Talk About When We Talk About Love</em></small>
+		</div>
+	</article>
+
+	<article>
+		<h1>Thank you!</h1>
+		<p>
+			Hunter Blanks, hblanks@artifex.org<br />
+			@tildehblanks | github.com/hblanks/talks
+		</p>
+	</article>
+
+    </section>
+
+  </body>
+</html>
