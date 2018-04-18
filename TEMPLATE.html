@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>reveal.js - Math Plugin</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="vendor/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="vendor/reveal.js/css/theme/white.css" id="theme">
+  </head>
+
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+
+        <section data-markdown>
+          <textarea data-template>
+          ## An introduction to likelihood
+        
+          Hunter Blanks
+          
+          2018-04-18
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### The problem
+        
+          Given some data:
+          
+          $$\vec x \in \mathbb{R}^n$$
+          
+          How do we describe the process(es) that generated it?
+          
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### The problem
+        
+          Given some data:
+          
+          $$\vec x \in \mathbb{R}^n$$
+          
+          How do we describe the process(es) that generated it?
+          
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+          ### TEMPLATE
+        
+          Aligned:
+
+          `
+          \[\begin{aligned}
+          \dot{x} &amp; = \sigma(y-x) \\
+          \dot{y} &amp; = \rho x - y - xz \\
+          \dot{z} &amp; = -\beta z + xy
+          \end{aligned} \]
+          `
+
+          Inline: `$ \sigma^2 $`
+          </textarea>
+        </section>
+
+
+
+      </div>
+    </div>
+
+    <script src="vendor/reveal.js/lib/js/head.min.js"></script>
+    <script src="vendor/reveal.js/js/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        history: true,
+        transition: 'linear',
+        math: {
+          mathjax: 'vendor/MathJax/MathJax.js',
+          config: 'TeX-AMS_HTML-full'
+        },
+        dependencies: [
+          // { src: 'vendor/reveal.js/lib/js/classList.js' }, already in chrome/ffox
+          { src: 'vendor/reveal.js/plugin/math/math.js', async: true },
+          { src: 'vendor/reveal.js/plugin/markdown/marked.js'},
+          { src: 'vendor/reveal.js/plugin/markdown/markdown.js'}
+        ]
+      });
+    </script>
+
+  </body>
+</html>

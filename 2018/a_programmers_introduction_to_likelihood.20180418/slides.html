@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>A Short, Short Introduction to Likelihood</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../../vendor/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../../vendor/reveal.js/css/theme/white.css" id="theme">
+    <link rel="stylesheet" href="../../vendor/highlight.js/default.min.css">
+    <link rel="stylesheet" href="../../css/reveal-white.css">
+  </head>
+
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+
+        <section data-markdown>
+          <textarea data-template>
+          ## A Short, Short Introduction to Likelihood
+        
+          Hunter Blanks
+          
+          2018-04-18
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### The problem
+        
+          Given some data: $\vec x \in \mathbb{R}^n$
+          
+          How do we describe the process(es) that generated it?
+          
+          ![The data factory - a sketch](data-factory.png) 
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### Or, more specifically:
+        
+          ![Fisher on problems of statistics ](problems-of-statistics.png) 
+
+          <cite>(Fisher, R. A. “On the Mathematical Foundations of Theoretical
+          Statistics.” _Philosophical Transactions of the Royal Society
+          of London_. Series A, Containing Papers of a Mathematical or
+          Physical Character, vol. 222, 1922, pp. 309–368.)</cite>
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### Steps for the rest of this talk
+
+          1. Specification: for a simple problem, pick a model and review its assumptions.
+          1. Estimation: estimate the key truth of this model, using the observed data and
+             likelihood theory. 
+          1. Distribution: assess how strong the evidence is for this estimate.
+          1. And to conclude: relate the theory to more complex applications.
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          <h3>
+          <ol>
+          <li>Specification $\Leftarrow$</li>
+          <li>Estimation</li>
+          <li>Distribution</li>
+          <li>Wider applications</li>
+          </ol>
+          </h3>
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+          ![The data factory - a sketch](data-factory.png) 
+          </textarea>
+        </section>
+
+
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 1. Specification
+        
+          We rarely know what's in the black box.  But, we can often assume something about
+          it that's useful. Some examples:
+
+          1. Binomial:
+          <!-- ("balls in the urn", $X \sim \mathrm{Binom}(n, \pi)$): -->
+             We just bought 500 new disks. How many should we expect to be DOA?
+          1. Poisson:
+            <!-- ("number of traffic accidents in a month", $X \sim
+                 \mathrm{Poisson}(\mu)): -->
+             How many customer support requests should we expect to receive in a typical week?
+          1. Time to event:
+             <!--          ", $X \sim \mathrm{Exp}(\mu)$) -->
+             1000 business customers just signed up. If last quarter is representative, which
+             customers are most likely to upgrade their plan this quarter?
+
+          <cite>
+          (&ldquo;All models are wrong; some models are useful.&rdquo; George Box,
+          et al. _Statistics for Experimenters_, 2005.)
+          </cite>
+          
+          <!-- TODO: add marginalia for distribution spec on left,
+               picture of observation on left. -->
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 1.1 DOA disks problem: a binomial model
+        
+          We typically think of the DOA disks like 500 marbles drawn from a giant urn (with replacement),
+          where the proportion of defective marbles in the urn is called a **<q>parameter</q>**,
+          $\pi$.
+
+          $$X \sim \mathrm{Bin}(500, \pi) \Leftrightarrow \mathbb{P}(X = x) = \binom{500}{x} \pi^x (1 - \pi)^{n - x}$$
+
+          Or, as a statistician might say: <q>The number of DOA drives, $X$, is a **binomially
+          distributed random variable** for 500 trials and $\pi$ proportion of successes, with
+          &lsquo;success&rsquo; meaning DOA.</q>
+
+          <!-- <small>This is a good model for things like counting coin flips, or drawing marbles from
+          an urn.</small> -->
+
+          </textarea>
+        </section>
+
+        <section data-markdown class="code-fragment">
+          <textarea data-template data-trim>
+          ### 1.2 Visualizing the model - source code
+
+          ```go
+          import (
+              ...
+              "gonum.org/v1/plot"
+          )
+          
+          // Returns the likelihood of pi, given that we observed x successes out
+          // of n trials,but after dividing out the binomial coefficient.
+          func likelihood(pi float64, x int, n int) float64 {
+              return math.Pow(pi, float64(x)) * math.Pow(1 - pi, float64(n - x))
+          }
+          
+          func plotProbability(p *plot.Plot) {
+              pi := 1e-4
+              n := 500
+              xMax := 5
+          
+              p.Title.Text = fmt.Sprintf(
+                  "Probability for 1-%d DOA drives in %d, given rate of %0.2f%%",
+                  xMax, n, pi * 100)
+              ...
+              values := plotter.Values{}
+              for x := 0; x <= xMax; x++ {
+                  p := binomial(n, x) * likelihood(pi, x, n)
+                  values = append(values, p)
+              }
+              bars, err := plotter.NewBarChart(values, vg.Length(1))
+              ...
+              p.Add(bars)
+          }
+          ```
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 1.2 Visualizing the model
+
+          <small>$$X \sim \mathrm{Bin}(500, \pi) \Leftrightarrow \mathbb{P}(X = x) = \binom{500}{x}
+          \pi^x (1 - \pi)^{n - x}$$</small>
+
+          ![Probability of DOA drives](probability.png) 
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 1.3 Using the model
+        
+          <small>$$X \sim \mathrm{Bin}(500, \pi) \iff \mathbb{P}(X = x) = \binom{500}{x} \pi^x (1 -
+          \pi)^{n - x}$$</small>
+
+          If we know the true DOA rate ($\pi$) is 0.01%, we can say:
+         
+          1. $\mathbb{E}(X) = \sum_{x = 1}^{n} x \mathbb{P}(X = x) = 500 \cdot 10^{-4} = 0.05 \Rightarrow $ <br />
+             <q>On average for 500 disks, 0.05 will be DOA.</q>
+
+          1. $\mathbb{P}(X = 1) = \binom{500}{1} 10^{-4} (1 - 10^{-4})^{499} \approx 0.048 \Rightarrow$ <br />
+             <q>${\sim}4.8\%$ of the time we buy 500 disks, 1 will be DOA.</q>
+
+          <strong>But this only works if we know $\pi$!</strong><br />
+          <small>(What do we do if we only know $x$?)</small>
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          <h3>
+          <ol>
+          <li>Specification</li>
+          <li>Estimation $\Leftarrow$</li>
+          <li>Distribution</li>
+          <li>Wider applications</li>
+          </ol>
+          </h3>
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 2. Estimation: the likelihood
+        
+          Most of the time, we know $x$ &amp; $n$, but we don't know $\pi$.
+
+          1. We can write probability $\mathbb{P}(X = x)$ as a function of $x$, **given some fixed
+             value of $\pi$**:
+             $$f(x|\pi) = \binom{500}{x} \pi^x (1 - \pi)^{n - x}$$
+          1. If **instead we fix $x$**, and allow $\pi$ to vary, we get a function that's no longer
+             a probability, but it _is_ useful:
+             $$L(\pi|x) = \binom{500}{x} \pi^x (1 - \pi)^{n - x}$$
+          1. We call this $L(\pi|x)$ the **<q>likelihood function</q>**.
+          </textarea>
+        </section>
+
+        <section data-markdown class="code-fragment">
+          <textarea data-template data-trim>
+          ### 2.1 Visualizing the likelihood - source code
+
+          ```go
+          import (
+              ...
+              "gonum.org/v1/plot"
+          )
+          
+          // Returns the likelihood of pi, given that we observed x successes out
+          // of n trials,but after dividing out the binomial coefficient.
+          func likelihood(pi float64, x int, n int) float64 {
+              return math.Pow(pi, float64(x)) * math.Pow(1 - pi, float64(n - x))
+          }
+          
+          func plotLikelihood(p *plot.Plot) {
+              x, n := 4, 500
+              mle := float64(4) / 500
+          
+              p.Title.Text = fmt.Sprintf("Likelihood of DOA failure rate (pi), given x = %d, n = %d",
+                  x, n)
+              ...
+              binom := binomial(n, x)
+              L := plotter.NewFunction(
+                  func(pi float64) float64 { return binom * likelihood(pi, x, n)})
+              L.Color = color.RGBA{B: 255, A: 255}
+              p.Add(L)
+              p.X.Min, p.X.Max = 0, 0.05
+              p.Y.Min, p.Y.Max = 0, binom * likelihood(mle, 4, 500) * 1.1 // some headroom for scale
+          }
+          ```
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 2.1 Visualizing the likelihood
+
+          ![Likelihood of DOA failure rate](likelihood.png) 
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 2.2 Maximum likelihood estimation
+        
+          <q>4 drives in 500 were DOA.</q> $ \iff x = 4 $
+
+          1. Our best estimate for DOA rate $\pi$ will occur at
+             $$\hat{\pi} = \underset{\mathrm{arg max} \pi}{L(\pi|x)} = \binom{500}{x} \pi^x (1 - \pi)^{n - x}$$
+          1. And we (somewhat) easily find $\hat{\pi}$:
+             <small>
+             <ol>
+             <li>Define `$l(\pi|x) = \ln L(\pi|x) = \ln \binom{500}{x} + x \ln \pi + (n - x) \ln (1 - \pi)$`</li>
+             <li>Find maximum `$l(\pi|x)$` by deriving `$l^\prime(\pi|x) =
+                \frac{\delta l(\pi|x)}{\delta \pi}$` and solving `$l^\prime(\pi|x) = 0 \Rightarrow \pi = \frac x n$`</li>
+             <li>Verify certain &lsquo;regularity conditions,&rsquo; and that
+              `$l^{\prime\prime}(\pi|x) = &lt; 0$` at the maximum.</li>
+             </ol>
+             </small>
+          1. Thus, our <q>maximum likelihood estimate</q> (MLE) for $\pi$ is
+             $\hat{\pi} = \frac{x}{n} = 0.008$
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 2.3 Visualizing the likelihood (again)
+
+          ![Likelihood of DOA failure rate](likelihood.png) 
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+          <h3>
+          <ol>
+          <li>Specification</li>
+          <li>Estimation</li>
+          <li>Distribution $\Leftarrow$</li>
+          <li>Wider applications</li>
+          </ol>
+          </h3>
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 3. Distribution
+
+          What can we say about the accuracy of our estimate?
+          It all comes down to the shape of the likelihood function.
+
+          ![Likelihood of DOA failure rate](likelihood.png) 
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 3.1 A note on distribution theory
+
+          Distribution theory shows that as $n \to \infty$, the difference of two log-likelihoods
+          follows a $\chi^2$ distribution. In our model, for instance, we could define $T$:
+
+          $$T := -2( \ln L(\pi_0|x) - \ln L(\hat{\pi}|x))$$
+          
+          $$ \lim_{n \to \infty} T \dot{\sim} \chi^2_1 $$
+
+          More than anything, it's this fact that makes likelihood so useful for inference:
+          confidence intervals and hypothesis tests almost always depend on it.
+
+          <small>(We'll touch on both, but only very, very briefly.)</small>
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 3.2 Hypothesis tests
+
+          Few people like discussing hypothesis tests! But, most love p-values. So, an example:
+
+          <small>$$p := \mathbb{P}(\text{Observing an x as or more extreme than 4}|\pi = 10^{-4})$$
+          </small>
+
+          Here, we've assumed that the true DOA rate is $10^{-4}$.
+          
+          And in this case, we can calculate our p-value either using the log-likelihood ratio or
+          using values from the model's probability mass function itself.
+          
+          <small>(And they'll turn out roughly the same.)</small>
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 3.3 Confidence intervals
+
+          Similarly for our example we also can calculate confidence intervals
+          using the log-likelihood or probability function.
+
+          ![Likelihood of DOA failure rate](llr.png) 
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 3.3 Confidence intervals
+
+          Here, what crosses the black line is our 95% CI, at $-2 (\ln L(\pi|x) - \ln L(\hat{\pi}|x) = \chi^2_{1,0.95} \approx 3.84 $
+
+          ![Likelihood of DOA failure rate](llr.png) 
+
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+          <h3>
+          <ol>
+          <li>Specification</li>
+          <li>Estimation</li>
+          <li>Distribution</li>
+          <li>Wider applications $\Leftarrow$</li>
+          </ol>
+          </h3>
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 4. Wider applications
+
+          As you've probably realized, you don't really need likelihood theory for a single binomial
+          model such as our example.
+
+          But it's often essential for wider applications. Notably:
+
+          1. Regression (linear, logistic, etc.)
+          1. Mixed effects models (i.e. time series / clustered data)
+          1. Survival analysis
+          1. Bayesian statistics
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### 4.1 Wider applications - continued
+
+          For all of these applications (except Bayesian statistics), you're main goal is to
+          find the maximum likelihood estimate for some vector $\vec \theta$ of parameters you care
+          about.  Often you'll remove parameters you don't care about (nuisance parameters) along
+          the way.
+
+          And like any maximization problem, there's many ways and many approximations.
+
+          <small>(Meanwhile, the Bayesians multiple a prior, divide by a constant, and then
+          integrate using Markov-Chain Monte Carlo Methods...but that's another topic.)
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### 4.2 Closing remarks and further reading
+
+          In the past 40-50 years, likelihood has become the predominant tool for statistical
+          inference. Most earlier methods can be explained in its terms.
+
+          There's many books; Pawitan's is hard to beat:
+
+          ![In All Likelihood - cover](in-all-likelihood-statistical-modelling-and-inference-using-likelihood.jpg) 
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### Thank you!
+
+          ![The data factory - a sketch](data-factory.png) 
+
+          </textarea>
+        </section>
+
+
+        <!--
+        <section data-markdown>
+          <textarea data-template>
+          ### TEMPLATE
+        
+          Aligned:
+
+          `
+          \[\begin{aligned}
+          \dot{x} &amp; = \sigma(y-x) \\
+          \dot{y} &amp; = \rho x - y - xz \\
+          \dot{z} &amp; = -\beta z + xy
+          \end{aligned} \]
+          `
+
+          Inline: `$ \sigma^2 $`
+          </textarea>
+        </section>
+        -->
+
+      </div>
+    </div>
+
+    <script src="../../vendor/reveal.js/lib/js/head.min.js"></script>
+    <script src="../../vendor/reveal.js/js/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        history: true,
+        transition: 'linear',
+        math: {
+          mathjax: '../../vendor/MathJax/MathJax.js',
+          config: 'TeX-AMS_HTML-full'
+        },
+        dependencies: [
+          // { src: '../../vendor/reveal.js/lib/js/classList.js' }, already in chrome/ffox
+          { src: '../../vendor/reveal.js/plugin/math/math.js', async: true },
+          { src: '../../vendor/reveal.js/plugin/markdown/marked.js'},
+          { src: '../../vendor/reveal.js/plugin/markdown/markdown.js'},
+          { src: '../../vendor/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ],
+        width: "60%"
+      });
+    </script>
+
+  </body>
+<!-- vim: set ts=2 sw=2 tw=100: --> 
+</html>
