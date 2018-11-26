@@ -24,6 +24,12 @@
 	max-height: 800px;
 }
 
-.reveal img[alt="In All Likelihood - cover"] {
-	height: 267px;
+.reveal sup {
+  font-size: 75%;
+  vertical-align: super;
+}
+
+.reveal sup.img {
+  font-size: 33%;
+  padding: 0;
 }
