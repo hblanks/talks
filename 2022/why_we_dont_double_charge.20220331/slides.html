@@ -66,6 +66,27 @@
           </textarea>
         </section>
 
+
+				<section data-markdown>
+          <textarea data-template>
+          E.g.
+          ```typescript
+          expect(stripe.invoices.update)
+            .toHaveBeenCalledWith(invoiceId, {
+              auto_advance: true,
+              metadata: {
+                TaxCode: expect.any(String)
+              },
+              description: ''
+            })
+          // One initial fetch and one when calculating the taxes
+          expect(stripe.invoices.retrieve).toHaveBeenCalledTimes(2)
+          expect(invoiceHandler.addTaxes).toHaveBeenCalledTimes(1)
+          ```
+          </textarea>
+        </section>
+
+
 				<section data-markdown>
           <textarea data-template>
           ## How we got out of this
@@ -101,6 +122,47 @@
           ![Fixed invoice](images/fixed-invoice-small.jpg)
           </textarea>
         </section>
+
+				<section data-markdown>
+          <textarea data-template>
+          ## Thank you!
+          </textarea>
+        </section>
+
+				<section data-markdown>
+          <textarea data-template>
+          ## Appendix
+          </textarea>
+        </section>
+
+
+				<section data-markdown>
+          <textarea data-template>
+          Non-concurrent processing:
+          ```typescript
+          /**
+           * Attempts to lock an invoice for processing out of
+           * a given state. Returns null immediately if the
+           * invoice is locked or not in the requested state.
+           */
+          async lock(id: string, state: State):
+            Promise<Invoice['id'] | null> {
+            const result = await this.query(
+              'SELECT id FROM invoices WHERE id = $1 AND ' +
+              'state = $2 FOR UPDATE SKIP LOCKED', [id, state])
+            if (result.length) {
+              return result[0].id
+            }
+            return null
+          }
+          ```
+
+
+          </textarea>
+        </section>
+
+
+
 
 			</div>
 		</div>
