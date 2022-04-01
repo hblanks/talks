@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>An early data pipeline using Airflow and Kubernetes</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../../vendor/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../../vendor/reveal.js/css/theme/white.css" id="theme">
+    <link rel="stylesheet" href="../../vendor/highlight.js/default.min.css">
+    <link rel="stylesheet" href="../../css/reveal-white.css">
+
+    <style>
+        .reveal img[alt="In All Likelihood - cover"] {
+          height: 267px;
+        }
+    </style>
+
+    <script>
+        var link = document.createElement( 'link' );
+    	  link.rel = 'stylesheet';
+    	  link.type = 'text/css';
+    	  link.href = window.location.search.match( /print-pdf/gi ) ?
+           '../../vendor/reveal.js/css/print/pdf.css' : '../../vendor/reveal.js/css/print/paper.css';
+    	  document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+
+        <section data-markdown>
+          <textarea data-template>
+          ## An early data pipeline using Airflow and Kubernetes
+        
+          Hunter Blanks
+          
+          2018-11-26
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### I: The data problem
+        
+          ![Many data sources and sinks](data-sources.png) 
+          
+
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+          #### Key concept: the Directed Acyclic Graph
+        
+          ```
+          #include <stdio.h>
+          int main(int argc, char **argv)
+          { printf("hello %d\n", argc); }
+          ```
+
+          ![A DAG for gcc](gcc-dag.png) 
+
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+          #### Key concept: the Directed Acyclic Graph
+        
+          ![A DAG for a case control study](casecontrol-dag.png) 
+
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+          #### Airflow is a service that runs DAGs
+        
+          ![snippets from https://github.com/apache/incubator-airflow](airflow-github.png) 
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### What our Airflow looks like
+        
+          ![screenshot from localdev](datalabs-airflow.png) 
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### Where it's headed
+        
+          ![planned DAG](datalabs-dag-scaled.png) 
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ## The other problem: deployment
+        
+          At a minimum, Airflow needs a persistent disk (for storing data in SQLite)
+          and operator access by HTTP.
+
+          It usually also needs RabbitMQ (for celery), PostgreSQL, authenticated user access by
+          HTTPS.
+          </div>
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### In localdev, we'd just use docker-compose
+
+          ```
+          services:
+            airflow:
+              image: datalabs-airflow:latest
+              ports: ["8080:8080"]
+              environment:
+                AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+                AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+                ...
+              command:
+                - sh
+                - "-c"
+                - "/airflow/initdb.sh && (airflow scheduler & ...)"
+              volumes:
+                - ./datalabs:/src/datalabs
+                - ./build/airflow.db:/airflow/db
+          ```
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### In production, we need orchestration
+
+          - service discovery (how service A connects to service B)
+          - persistent volumes
+          - rescheduling containers on node replacement
+
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### Bringing it up with EKS and Terraform
+          
+          `datalabs-infra/modules/eks_cluster` brings up:
+
+          1. Kubernetes masters (the EKS cluster)
+          1. An auto scaling group of Kubernetes nodes
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### Bringing it up with EKS and Terraform
+          
+          ![EKS](eks.png) 
+
+          </textarea>
+        </section>
+
+
+
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### Sample commands
+
+          ```
+          $ kubectl get deployments
+          NAME               DESIRED   CURRENT   AVAILABLE   AGE
+          datalabs-airflow   1         1         0           18d
+
+          $ kubectl get pods
+          NAME                                READY   STATUS    AGE
+          datalabs-airflow-69bc96f86f-tbv54   1/1     Running   17d
+          ```
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### Next steps 
+
+          - VPC / network ACLs (`kubectl port-forward`, `kubectl exec`)
+          - HTTP authentication
+          - RabbitMQ w/persistent volume
+
+          </textarea>
+        </section>
+
+
+        <section data-markdown>
+          <textarea data-template>
+
+          ### Thank you!
+
+
+          </textarea>
+        </section>
+
+
+        <!--
+        <section data-markdown>
+          <textarea data-template>
+          ### TEMPLATE
+        
+          Aligned:
+
+          `
+          \[\begin{aligned}
+          \dot{x} &amp; = \sigma(y-x) \\
+          \dot{y} &amp; = \rho x - y - xz \\
+          \dot{z} &amp; = -\beta z + xy
+          \end{aligned} \]
+          `
+
+          Inline: `$ \sigma^2 $`
+          </textarea>
+
+          <textarea data-template>
+          <h3>
+          <ol>
+          <li>Specification</li>
+          <li>Estimation</li>
+          <li>Distribution</li>
+          <li>Wider applications $\Leftarrow$</li>
+          </ol>
+          </h3>
+          </textarea>
+
+        </section>
+        -->
+
+      </div>
+    </div>
+
+    <script src="../../vendor/reveal.js/lib/js/head.min.js"></script>
+    <script src="../../vendor/reveal.js/js/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        history: true,
+        transition: 'linear',
+        math: {
+          mathjax: '../../vendor/MathJax/MathJax.js',
+          config: 'TeX-AMS_HTML-full'
+        },
+        dependencies: [
+          // { src: '../../vendor/reveal.js/lib/js/classList.js' }, already in chrome/ffox
+          { src: '../../vendor/reveal.js/plugin/math/math.js', async: true },
+          { src: '../../vendor/reveal.js/plugin/markdown/marked.js'},
+          { src: '../../vendor/reveal.js/plugin/markdown/markdown.js'},
+          { src: '../../vendor/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ],
+        width: "60%"
+      });
+    </script>
+
+  </body>
+<!-- vim: set ts=2 sw=2 tw=100: --> 
+</html>

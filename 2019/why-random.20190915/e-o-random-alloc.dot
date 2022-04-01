@@ -1,0 +1,6 @@
+digraph {
+    rankdir=LR;
+    node[shape=plaintext];
+    A -> E;
+    E -> O;
+}

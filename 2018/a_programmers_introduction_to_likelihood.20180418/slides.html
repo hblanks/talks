@@ -8,10 +8,10 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <link rel="stylesheet" href="../../vendor/reveal.js/css/reveal.css">
-    <link rel="stylesheet" href="../../vendor/reveal.js/css/theme/white.css" id="theme">
-    <link rel="stylesheet" href="../../vendor/highlight.js/default.min.css">
-    <link rel="stylesheet" href="../../css/reveal-white.css">
+    <link rel="stylesheet" href="vendor/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="vendor/reveal.js/css/theme/white.css" id="theme">
+    <link rel="stylesheet" href="vendor/highlight.js/default.min.css">
+    <link rel="stylesheet" href="css/reveal-white.css">
 
     <style>
         .reveal img[alt="In All Likelihood - cover"] {
@@ -500,8 +500,8 @@
       </div>
     </div>
 
-    <script src="../../vendor/reveal.js/lib/js/head.min.js"></script>
-    <script src="../../vendor/reveal.js/js/reveal.js"></script>
+    <script src="vendor/reveal.js/lib/js/head.min.js"></script>
+    <script src="vendor/reveal.js/js/reveal.js"></script>
     <script>
       Reveal.initialize({
         history: true,
@@ -511,11 +511,11 @@
           config: 'TeX-AMS_HTML-full'
         },
         dependencies: [
-          // { src: '../../vendor/reveal.js/lib/js/classList.js' }, already in chrome/ffox
-          { src: '../../vendor/reveal.js/plugin/math/math.js', async: true },
-          { src: '../../vendor/reveal.js/plugin/markdown/marked.js'},
-          { src: '../../vendor/reveal.js/plugin/markdown/markdown.js'},
-          { src: '../../vendor/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+          // { src: 'vendor/reveal.js/lib/js/classList.js' }, already in chrome/ffox
+          { src: 'vendor/reveal.js/plugin/math/math.js', async: true },
+          { src: 'vendor/reveal.js/plugin/markdown/marked.js'},
+          { src: 'vendor/reveal.js/plugin/markdown/markdown.js'},
+          { src: 'vendor/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
         ],
         width: "60%"
       });

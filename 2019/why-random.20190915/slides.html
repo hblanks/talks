@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Putting the R in RCT</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../../vendor/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../../vendor/reveal.js/css/theme/white.css" id="theme">
+    <link rel="stylesheet" href="../../vendor/highlight.js/default.min.css">
+    <link rel="stylesheet" href="../../css/reveal-white.css">
+
+    <style>
+        .reveal img[alt="In All Likelihood - cover"] {
+          height: 267px;
+        }
+    </style>
+
+    <script>
+        var link = document.createElement( 'link' );
+    	  link.rel = 'stylesheet';
+    	  link.type = 'text/css';
+    	  link.href = window.location.search.match( /print-pdf/gi ) ?
+           '../../vendor/reveal.js/css/print/pdf.css' : '../../vendor/reveal.js/css/print/paper.css';
+    	  document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+
+        <section data-markdown>
+          <textarea data-template>
+          ## Putting the R in RCT
+          
+          Hunter Blanks, Wellcome Data Labs
+          
+          2019-09-15
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ![BMJ Streptomycin Treatment of Pulmonary Tuberculosis 1948 Cover Page](bmj-streptomycin-treatment-1948.png)
+
+          Why is this paper important?
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### A word on types of studies (1/2)
+          
+          ![E to O](e-o.png)
+
+          We often want to know: how does an exposure $E$
+          associate with an outcome $O$? Two examples:
+          
+          * Does streptomycin help cure tuberculosis?
+          * Does going standing outside pubs cause cancer?
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### A word on types of studies (2/2)
+          
+          ```python
+          P_SMOKING = 0.2
+          P_CANCER_GIVEN_SMOKING = 0.1
+          P_CANCER_NO_SMOKING = 0.005
+          P_PUB_LOITERING_GIVEN_SMOKING = 0.8
+          P_PUB_LOITERING_NO_SMOKING = 0.1
+          ```
+          
+
+          For some of these studies, we can allocate the exposure. These are called
+          *interventional* studies.
+
+          </textarea>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+          ### A word on types of studies (2/2)
+          
+          ![E to O, confounded](e-o-confounded-alloc.png)
+
+          The central challenge: what if something else is associated with both an exposure and
+          an outcome?
+
+          For instance, smokers are more likely to stand outside pubs...and are more likely to get
+          lung cancer.
+          
+          So, maybe loitering outside pubs doesn't cause cancer.
+          </textarea>
+        </section>
+
+
+        <!--
+        <section data-markdown>
+          <textarea data-template>
+          ### TEMPLATE
+        
+          Aligned:
+
+          `
+          \[\begin{aligned}
+          \dot{x} &amp; = \sigma(y-x) \\
+          \dot{y} &amp; = \rho x - y - xz \\
+          \dot{z} &amp; = -\beta z + xy
+          \end{aligned} \]
+          `
+
+          Inline: `$ \sigma^2 $`
+          </textarea>
+
+          <textarea data-template>
+          <h3>
+          <ol>
+          <li>Specification</li>
+          <li>Estimation</li>
+          <li>Distribution</li>
+          <li>Wider applications $\Leftarrow$</li>
+          </ol>
+          </h3>
+          </textarea>
+
+        </section>
+        -->
+
+      </div>
+    </div>
+
+    <script src="../../vendor/reveal.js/lib/js/head.min.js"></script>
+    <script src="../../vendor/reveal.js/js/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        history: true,
+        transition: 'linear',
+        math: {
+          mathjax: '../../vendor/MathJax/MathJax.js',
+          config: 'TeX-AMS_HTML-full'
+        },
+        dependencies: [
+          // { src: '../../vendor/reveal.js/lib/js/classList.js' }, already in chrome/ffox
+          { src: '../../vendor/reveal.js/plugin/math/math.js', async: true },
+          { src: '../../vendor/reveal.js/plugin/markdown/marked.js'},
+          { src: '../../vendor/reveal.js/plugin/markdown/markdown.js'},
+          { src: '../../vendor/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ],
+        width: "60%"
+      });
+    </script>
+
+  </body>
+<!-- vim: set ts=2 sw=2 tw=100: --> 
+</html>

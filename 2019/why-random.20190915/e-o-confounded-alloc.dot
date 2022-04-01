@@ -1,0 +1,10 @@
+digraph {
+    rankdir=LR;
+    node[shape=plaintext];
+    E[group=min, label="Pub loitering"];
+    O[group=min, label="Cancer"];
+    A[label="Smoking"];
+    A -> O;
+    A -> E;
+    E -> O;
+}
